@@ -1,6 +1,7 @@
 import json
 import os.path
 import random
+from modual.text_color import text_color
 
 
 def __get_questions(question_path: str):
@@ -41,13 +42,13 @@ def _apply_answer_to_question(full_question_dictionary: dict, key_chosen: str, a
 
 
 def __save_modified_json(path, full_question_dict:dict):
-    print('question received and will be save')
+    print(f'{text_color("INFO")}question received and will be save{text_color("base")}')
     if not os.path.isfile(path):
-        print('ERROR IN JSON ANSWER FILE PATH DO NOT CONTINUE ANSWERING')
+        print(f'{text_color("ERROR")} IN JSON ANSWER FILE PATH DO NOT CONTINUE ANSWERING{text_color("base")}')
     with open(path,'w',encoding='utf-8') as f:
         json.dump(full_question_dict,f)
         f.close()
-    print("answer applied. You can safely quit if needed\n\n")
+    print(f"{text_color('backup')}applied. You can safely quit if needed\n\n{text_color('base')}")
 
 
 # This is bad practice of not really looking what is in the input but I also want as much liberty as possible for us to answer
@@ -63,6 +64,7 @@ def student_learning(path_to_json: str = './question_data/question.json'):
     new_questions = __get_new_questions(full_questions)
     len_n_question = len(new_questions)
     keys = list(new_questions.keys())
+    print(f"The total question left are : {len(keys)}")
     while len(keys) > 0:
         question_key = __get_random_new_question_key(keys,len_n_question)
         answer = __answer_question(new_questions, question_key)
