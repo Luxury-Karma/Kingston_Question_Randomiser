@@ -13,9 +13,7 @@
                                             ░ ░
 
 
-"""
 
-"""
 This script is to help into doing question and learn without being block in the same modual or need
 to change question by your self.
 
