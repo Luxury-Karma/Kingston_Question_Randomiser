@@ -29,7 +29,7 @@ from modual.get_question import get_questions
 from modual.question_randomizer import student_learning
 from modual.allready_answered_questions import convert_to_json
 from modual.text_color import text_color
-from modual.port_question_answer_to_word import make_it_word
+from modual.port_question_answer_to_word import make_it_word_too
 import argparse
 
 
@@ -96,7 +96,7 @@ YM      M9  MM    MM MM            `Mb MM      MM MM     MM MM    MM        MM  
         path = arg.already_answered_question.strip('"').strip("'")
         convert_to_json(path)
 
-    make_it_word()
+    make_it_word_too()
     exit()
     student_learning()
 
