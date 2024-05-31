@@ -43,7 +43,8 @@ def get_question_split(text: str, word_to_split_sections: str) -> dict:
             section_title = 'No title found'
 
         # Split the section by questions and remove empty strings
-        section_questions = [q.strip() for q in re.split(r'\n\d+\.', section) if q.strip()]
+        section_questions = [q.strip() for q in re.split(r'\d+\.', section) if q.strip()]
+
 
         # Print the questions for each section
         question_index = 1
@@ -51,7 +52,7 @@ def get_question_split(text: str, word_to_split_sections: str) -> dict:
         for question in section_questions:
             question = question.replace('\n',' ')
             question_format = {
-                'question': question,
+                'question': question if not re.search(r'\s{3,}\d+', question) else re.sub(r'\s{3,}\d+', '', question),
                 'section': section_title,
                 'answer': '',
                 'question_index': question_index
