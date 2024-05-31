@@ -1,7 +1,7 @@
 import json
+import re
 
 from pypdf import PdfReader
-import re
 
 
 def get_pdf_text(pdf_path: str, page_to_ignore: list[int]) -> str:
