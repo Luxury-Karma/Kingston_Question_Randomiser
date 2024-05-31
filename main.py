@@ -46,8 +46,8 @@ def parser():
     par.add_argument('-pdf', '--path_to_pdf', required=False, type=str,
                      help='Store the path to the pdf file we need to convert the question too. If needed to program '
                           'will ask an input if this parameter is not there')
-    par.add_argument('-f', '--finalise', required=False, action='store_true',
-                     help='If you want to make the word file this is the parameter for you!')
+    par.add_argument('-f', '--finalise', required=False, type=str,
+                     help='If you want to make the word file this is the parameter for you! also don\'t forget its a word file path you need')
     par.add_argument('-i', '--ignore', required=False, type=list,
                      help='will modify the ignore page part of the script (base value [0,1,2])')
     return par
@@ -95,9 +95,11 @@ YM      M9  MM    MM MM            `Mb MM      MM MM     MM MM    MM        MM  
     if arg.already_answered_question:
         path = arg.already_answered_question.strip('"').strip("'")
         convert_to_json(path)
+    if arg.finalise:
+        make_it_word_too(arg.finalise)
+        print(f"{text_color('TITLE')}Good job hope it went well!")
+        exit()
 
-    make_it_word_too()
-    exit()
     student_learning()
 
 

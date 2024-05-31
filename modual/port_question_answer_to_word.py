@@ -1,5 +1,6 @@
 import json
 from docx import Document
+from modual.text_color import text_color
 
 def make_it_word():
     data: dict = {}
@@ -17,11 +18,12 @@ def make_it_word():
         f.write(full_file)
 
 
-def make_it_word_too():
+def make_it_word_too(path_to_word):
     data = {}
+    print(f'{text_color("INFO")}loading answer file at ./question_data/question.json{text_color("base")}')
     with open('./question_data/question.json') as f:
         data = json.load(f)
-
+    print(f'{text_color("INFO")}Starting to build the word file{text_color("base")}')
     doc = Document()
 
     # Initialize variables for ToC
@@ -32,36 +34,20 @@ def make_it_word_too():
     last_section_known = ''
     index = []
 
-    page_numbers = {}  # Store page numbers for each section
-
     for _, value in data.items():
         if last_section_known != value['section']:
             last_section_known = value['section']
-            # Add section heading
-            section_heading = doc.add_heading(value['section'].upper(), level=1)
-            index.append((value['section'], section_heading))
+            doc.add_heading(value['section'].upper(), level=1)
+            index.append(value['section'])
 
-            # Store the position of the section heading for later use
-            page_numbers[value['section']] = len(doc.element.body)
-
-        # Add question and answer
         doc.add_paragraph(f'{value["question_index"]}. {value["question"]}')
         doc.add_paragraph(f'\t{value["answer"]}\n')
 
-    # Add index to ToC with placeholders for page numbers
-    for section, heading in index:
-        toc_run = toc.add_run(section)
-        toc_run.bold = True
-        toc.add_run("\t")  # Add some spacing
-        # Add placeholder for page number
-        toc.add_run("Page ").italic = True
-        toc.add_run("[PageNumber]").italic = True
-
-        # Update page number field
-        section_start = page_numbers[section]
-        page_number_field = doc.element.body[section_start].addnext(
-            '<w:fldSimple w:instr="PAGE"/>'
-        )
+    # Add index to ToC
+    for section in index:
+        toc.add_run(section).bold = True
+        toc.add_run("\n")
 
     # Save the document
-    doc.save('./word_file_with_toc.docx')
+    doc.save(path_to_word)
+    print(f"{text_color('backup')}Word document saved at {path_to_word}{text_color('base')}")
