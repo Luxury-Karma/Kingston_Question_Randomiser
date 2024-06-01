@@ -21,37 +21,39 @@
     <div id="response"></div>
 
     <script>
-    $(document).ready(function(){
-        $('#myForm').on('submit', function(event) {
-            event.preventDefault(); // Prevent the default form submission
+    function updateQuestion(questionData, remainingCount) {
+    var questionHTML = '<p>Question: <span id="question">' + questionData.section + ' #' + questionData.question_index + ': ' + questionData.question + '</span></p>';
+    $('#question').html(questionHTML);
+    $('#answer').val(questionData.answer); // Update answer textarea
 
-            var answer = $('#answer').val();
+    // Update remaining questions count
+    $('#remaining').text(remainingCount);
+}
 
-            $.ajax({
-                type: 'POST',
-                url: '/submit',
-                data: JSON.stringify({answer: answer}),
-                contentType: 'application/json',
-                success: function(response) {
-                    $('#response').html('<p>' + response.message + '</p>');
-                    updateQuestion(response.next_question);
-                },
-                error: function(error) {
-                    $('#response').html('<p>An error occurred</p>');
-                }
-            });
+$(document).ready(function(){
+    updateQuestion({{ question|tojson|safe }}, {{ remaining_questions }});
+
+    $('#myForm').on('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        var answer = $('#answer').val();
+
+        $.ajax({
+            type: 'POST',
+            url: '/submit',
+            data: JSON.stringify({answer: answer}),
+            contentType: 'application/json',
+            success: function(response) {
+                $('#response').html('<p>' + response.message + '</p>');
+                updateQuestion(response.next_question, response.remaining_questions);
+            },
+            error: function(error) {
+                $('#response').html('<p>An error occurred</p>');
+            }
         });
-
-        function updateQuestion(questionData) {
-            var questionHTML = '<p>Question: <span id="question">' + questionData.section + ' #' + questionData.question_index + ': ' + questionData.question + '</span></p>';
-            $('#question').html(questionHTML);
-            $('#answer').val(questionData.answer); // Update answer textarea
-
-            // Update remaining questions count
-            var remainingCount = {{ remaining_questions }};
-            $('#remaining').text(remainingCount);
-        }
     });
+});
+
     </script>
 
 </body>

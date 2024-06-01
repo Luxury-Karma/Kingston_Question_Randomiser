@@ -20,15 +20,16 @@ def home_page():
     remaining_questions = len(all_keys)  # Get the count of remaining questions
     return render_template('web_app_version.html', question=question, remaining_questions=remaining_questions)
 
+
 @app.route('/submit', methods=['POST'])
 def submit():
-    global active_key, all_question, new_question
+    global active_key, all_question, new_question, all_keys
     data = request.get_json()
     answer = data.get('answer')
+
     # Process the current answer
     print(f"answer of {active_key} is : {answer}")
     all_question = _apply_answer_to_question(all_question, active_key, answer)
-    #__save_modified_json(path_to_question_file, all_question) #UNCOMMMENT WHEN READY TO WORK FOR REAL
 
     # next question
     new_question.pop(active_key)
@@ -39,7 +40,10 @@ def submit():
 
     next_question_data = new_question[active_key]
 
-    # Return the message and next question as JSON
+    # Calculate remaining questions count
+    remaining_questions = len(all_keys)
+
+    # Return the message, next question, and remaining questions count as JSON
     response = {
         "message": "Your answer has been submitted!",
         "next_question": {
@@ -47,10 +51,10 @@ def submit():
             "section": next_question_data['section'],
             "question_index": next_question_data['question_index'],
             "answer": next_question_data['answer']
-        }
+        },
+        "remaining_questions": remaining_questions
     }
     return jsonify(response)
-
 
 
 def run_web_server(debug, port, path_to_questions):
