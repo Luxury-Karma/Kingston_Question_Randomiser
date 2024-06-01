@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 from modual.question_randomizer import (__get_questions, __get_new_questions, __get_random_new_question_key,
-                                 _apply_answer_to_question, __save_modified_json)
+                                        _apply_answer_to_question, __save_modified_json)
+
 app = Flask(__name__, template_folder='../html')
 
 """
@@ -13,6 +14,8 @@ new_question: dict = {}
 all_keys: list = []
 active_key = ''
 path_to_question_file = ''
+
+
 @app.route('/')
 def home_page():
     global new_question
@@ -27,21 +30,27 @@ def submit():
     data = request.get_json()
     answer = data.get('answer')
 
-    # Process the current answer
-    print(f"answer of {active_key} is : {answer}")
-    all_question = _apply_answer_to_question(all_question, active_key, answer)
+    if not answer or answer.strip().strip('\n').strip(' ') == '':  # no answer received
+        print('its okay you\'ll get it next time !')
+        active_key = __get_random_new_question_key(all_keys, len(all_keys))
 
-    # next question
-    new_question.pop(active_key)
-    all_keys.remove(active_key)
-    print(len(all_keys))
-    active_key = __get_random_new_question_key(all_keys, len(all_keys))
-    print(f'next question would be {active_key}')
+    else:  # answer received
+        # Process the current answer
+        print(f"answer of {active_key} is : {answer}")
+        all_question = _apply_answer_to_question(all_question, active_key, answer)
 
+        # next question
+        new_question.pop(active_key)
+        all_keys.remove(active_key)
+        active_key = __get_random_new_question_key(all_keys, len(all_keys))
+
+    # apply to webpage
     next_question_data = new_question[active_key]
 
     # Calculate remaining questions count
     remaining_questions = len(all_keys)
+
+    __save_modified_json(path_to_question_file, all_question)  # save the question
 
     # Return the message, next question, and remaining questions count as JSON
     response = {
@@ -65,5 +74,4 @@ def run_web_server(debug, port, path_to_questions):
     active_key = __get_random_new_question_key(all_keys, len(all_keys))
     path_to_question_file = path_to_questions
 
-    app.run(debug=debug, host='0.0.0.0', port=port)
-
+    app.run(debug=debug, host='127.0.0.1', port=port)

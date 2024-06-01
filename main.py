@@ -50,6 +50,7 @@ def parser():
     par.add_argument('-i', '--ignore', required=False, type=list,
                      help='will modify the ignore page part of the script (base value [0,1,2])')
     par.add_argument('-txt','--txt',required=False,type=str,help='Make the formated text file to help visualize the json')
+    par.add_argument('-w', '--web', required=False, action='store_true', help='Is here to activate the flask server to have a tiny bether gui')
     return par
 
 
@@ -86,7 +87,7 @@ YM      M9  MM    MM MM            `Mb MM      MM MM     MM MM    MM        MM  
 
 """)
     arg = parser().parse_args()
-    run_web_server(False, 8080, './question_data/question.json')
+
     if is_get_question or arg.resset:
         page_to_ignore = arg.ignore if arg.ignore else [0, 1, 2]
         path_to_pdf = arg.path_to_pdf if arg.path_to_pdf else input('path to exercise pdf: ')
@@ -95,15 +96,24 @@ YM      M9  MM    MM MM            `Mb MM      MM MM     MM MM    MM        MM  
     if arg.already_answered_question:
         path = arg.already_answered_question.strip('"').strip("'")
         convert_to_json(path)
+
     if arg.finalise:
         make_it_word_too(arg.finalise)
         print(f"{text_color('TITLE')}Good job hope it went well!")
         exit()
+
     if arg.txt:
         make_it_word(arg.txt)
         print()
         print(f"{text_color('TITLE')}Good job hope it went well!")
         exit()
+
+    if arg.web:
+        print(f'{text_color("INFO")} starting local webserver on port 8080 {text_color("base")}')
+        run_web_server(False, 8080, './question_data/question.json')
+        exit()
+
+
 
     student_learning()
 

@@ -65,7 +65,6 @@ def student_learning(path_to_json: str = './question_data/question.json'):
     new_questions = __get_new_questions(full_questions)
     len_n_question = len(new_questions)
     keys = list(new_questions.keys())
-    print(f"The total question left are : {len(keys)}")
     while len(keys) > 0:
         print(f"The total question left are : {len(keys)}")
         question_key = __get_random_new_question_key(keys,len_n_question)
