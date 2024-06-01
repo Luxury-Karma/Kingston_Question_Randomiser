@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Randomiser</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Question Randomiser</h1>
+
+    <p>Question: <span id="question">{{ question.section }} #{{ question.question_index }}: {{ question.question }}</span></p>
+    <p>Remaining questions: <span id="remaining"></span></p>
+
+    <form id="myForm">
+        <label for="answer">Answer</label>
+        <textarea id="answer" name="answer" rows="3" cols="70">{{ question.answer }}</textarea>
+        <button type="submit">Submit</button>
+    </form>
+
+    <div id="response"></div>
+
+    <script>
+    $(document).ready(function(){
+        $('#myForm').on('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            var answer = $('#answer').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/submit',
+                data: JSON.stringify({answer: answer}),
+                contentType: 'application/json',
+                success: function(response) {
+                    $('#response').html('<p>' + response.message + '</p>');
+                    updateQuestion(response.next_question);
+                },
+                error: function(error) {
+                    $('#response').html('<p>An error occurred</p>');
+                }
+            });
+        });
+
+        function updateQuestion(questionData) {
+            var questionHTML = '<p>Question: <span id="question">' + questionData.section + ' #' + questionData.question_index + ': ' + questionData.question + '</span></p>';
+            $('#question').html(questionHTML);
+            $('#answer').val(questionData.answer); // Update answer textarea
+
+            // Update remaining questions count
+            var remainingCount = {{ remaining_questions }};
+            $('#remaining').text(remainingCount);
+        }
+    });
+    </script>
+
+</body>
+</html>

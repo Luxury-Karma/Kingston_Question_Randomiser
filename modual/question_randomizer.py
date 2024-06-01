@@ -4,7 +4,7 @@ import random
 from modual.text_color import text_color
 
 
-def __get_questions(question_path: str):
+def __get_questions(question_path: str) -> dict:
     if os.path.isfile(question_path):
         with open(question_path, 'r', encoding='utf-8') as f:
             try:
@@ -16,7 +16,7 @@ def __get_questions(question_path: str):
     return {}
 
 
-def __get_new_questions(questions: dict):
+def __get_new_questions(questions: dict) -> dict :
     new_question = {}
     for key, value in questions.items():
         ans_val = value['answer'].replace(' ', '')
@@ -39,6 +39,7 @@ def __answer_question(new_question: dict, key_chosen: str):
 
 def _apply_answer_to_question(full_question_dictionary: dict, key_chosen: str, answer_chosen: str):
     full_question_dictionary[key_chosen]['answer'] = answer_chosen
+    return full_question_dictionary
 
 
 def __save_modified_json(path, full_question_dict:dict):
@@ -66,12 +67,15 @@ def student_learning(path_to_json: str = './question_data/question.json'):
     keys = list(new_questions.keys())
     print(f"The total question left are : {len(keys)}")
     while len(keys) > 0:
+        print(f"The total question left are : {len(keys)}")
         question_key = __get_random_new_question_key(keys,len_n_question)
         answer = __answer_question(new_questions, question_key)
         if answer.replace(' ', '') == '':
             print('its okay we will come back later !')
             continue
-        _apply_answer_to_question(full_questions, question_key, answer)
+        full_questions = _apply_answer_to_question(full_questions, question_key, answer)
         __save_modified_json(path_to_json, full_questions)
         keys.remove(question_key)
         new_questions.pop(question_key, None)  # kinda useless step. if error we will remove I just like removing it from the question pool insted of ignoring it
+
+

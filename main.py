@@ -28,6 +28,7 @@ from modual.question_randomizer import student_learning
 from modual.allready_answered_questions import convert_to_json
 from modual.text_color import text_color
 from modual.port_question_answer_to_word import make_it_word_too, make_it_word
+from modual.web_server_interactions import run_web_server
 import argparse
 
 
@@ -85,7 +86,7 @@ YM      M9  MM    MM MM            `Mb MM      MM MM     MM MM    MM        MM  
 
 """)
     arg = parser().parse_args()
-
+    run_web_server(False, 8080, './question_data/question.json')
     if is_get_question or arg.resset:
         page_to_ignore = arg.ignore if arg.ignore else [0, 1, 2]
         path_to_pdf = arg.path_to_pdf if arg.path_to_pdf else input('path to exercise pdf: ')
