@@ -1,5 +1,6 @@
 import json
 import re
+from modual.question_randomizer import __save_modified_json
 
 
 def change_answer_to_question(question_to_find: str, answer_to_place: list[str], question_dict: dict):
@@ -10,6 +11,7 @@ def change_answer_to_question(question_to_find: str, answer_to_place: list[str],
         for e in answer_to_place:
             answer += f' {e}'
         values['answer'] = answer
+        break  # no need to look anymore. there is not supose to be duplicate
     print(f'Answer for question : {question_to_find} was sett and formatted to : {answer_to_place}')
     return question_dict
 
@@ -39,3 +41,4 @@ def convert_to_json(path_of_original_file):
         if len(question_answer)<2:
             continue
         question_dict = change_answer_to_question(question_answer[0], question_answer[1:], question_dict)
+    __save_modified_json('question_data/question.json', question_dict)

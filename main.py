@@ -19,7 +19,7 @@ to change question by your self.
 
 Author: Luxury_Karma
 Date: 2024-05-31
-Version: a0.0.1
+Version: 1.0.0
 """
 
 import os.path
@@ -27,7 +27,7 @@ from modual.get_question import get_questions
 from modual.question_randomizer import student_learning
 from modual.allready_answered_questions import convert_to_json
 from modual.text_color import text_color
-from modual.port_question_answer_to_word import make_it_word_too
+from modual.port_question_answer_to_word import make_it_word_too, make_it_word
 import argparse
 
 
@@ -48,6 +48,7 @@ def parser():
                      help='If you want to make the word file this is the parameter for you! also don\'t forget its a word file path you need')
     par.add_argument('-i', '--ignore', required=False, type=list,
                      help='will modify the ignore page part of the script (base value [0,1,2])')
+    par.add_argument('-txt','--txt',required=False,type=str,help='Make the formated text file to help visualize the json')
     return par
 
 
@@ -95,6 +96,11 @@ YM      M9  MM    MM MM            `Mb MM      MM MM     MM MM    MM        MM  
         convert_to_json(path)
     if arg.finalise:
         make_it_word_too(arg.finalise)
+        print(f"{text_color('TITLE')}Good job hope it went well!")
+        exit()
+    if arg.txt:
+        make_it_word(arg.txt)
+        print()
         print(f"{text_color('TITLE')}Good job hope it went well!")
         exit()
 
