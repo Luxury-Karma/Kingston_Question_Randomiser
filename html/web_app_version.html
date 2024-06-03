@@ -41,17 +41,31 @@
 
     <div id="response"></div>
 
+<form action="https://www.google.com/search" class="searchform" method="get" name="searchform" target="_blank">
+    <input id="searchQuery" name="q" type="hidden">
+    <label for="search_button">Unsure? search online! </label>
+    <button class="button" type="submit" name="search_button" id="search_button">Search</button>
+</form>
+
+
+
+
     <script>
-    function updateQuestion(questionData, remainingCount) {
+
+function updateQuestion(questionData, remainingCount) {
     var questionHTML = '<p>Question: <span id="question">' + questionData.section + ' #' + questionData.question_index + ': ' + questionData.question + '</span></p>';
     $('#question').html(questionHTML);
     $('#answer').val(questionData.answer); // Update answer textarea
 
     // Update remaining questions count
     $('#remaining').text(remainingCount);
+
+    // Update the hidden search query input field
+    $('#searchQuery').val(questionData.question);
 }
 
 $(document).ready(function(){
+    // Initial update of the question and search query
     updateQuestion({{ question|tojson|safe }}, {{ remaining_questions }});
 
     $('#myForm').on('submit', function(event) {
@@ -74,6 +88,7 @@ $(document).ready(function(){
         });
     });
 });
+
 
     </script>
 
