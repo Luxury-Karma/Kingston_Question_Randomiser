@@ -29,6 +29,7 @@ TO USE THE OLD QUESTION LOADER
 you need to format a file in this form : 
 
 Question\n answer
+
 Be sure the question is on ONE LINE and not two. To split the answer you need to have an empty \n inbetween the last answer and the new question.
 
 use -h to find all the parameter possible
